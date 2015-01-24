@@ -53,17 +53,17 @@ class Employee
 	protected $experiences;
 
 	/**
-	* @ORM\Column(type="string", nullable=true)
+	* @ORM\Column(type="string", nullable=false)
 	*/
 	protected $city;
 
 	/**
-	* @ORM\Column(type="string", nullable=true)
+	* @ORM\Column(type="string", nullable=false)
 	*/
 	protected $zipCode;
 
 	/**
-	* @ORM\Column(type="string", nullable=true)
+	* @ORM\Column(type="string", nullable=false)
 	*/
 	protected $country;
 
@@ -154,7 +154,7 @@ class Employee
 		return $this->experiences;
 	}
 
-	function setExperiences(ArrayCollection $experiences)
+	function setExperiences($experiences)
 	{
 		$this->experiences = $experiences;
 		return $this;

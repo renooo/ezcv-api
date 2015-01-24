@@ -30,4 +30,31 @@ class Tag
 	* @ORM\ManyToMany(targetEntity="Mission", mappedBy="tags")
 	*/
 	protected $missions;
+
+	function getId()
+	{
+		return $this->id;
+	}
+
+	function getLabel()
+	{
+		return $this->label;
+	}
+
+	function setLabel($label)
+	{
+		$this->label = $label;
+		return $this;
+	}
+
+	function getDescription()
+	{
+		return $this->description;
+	}
+
+	function setDescription($description)
+	{
+		$this->description = $description;
+		return $this;
+	}
 }

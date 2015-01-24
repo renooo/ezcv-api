@@ -132,7 +132,7 @@ class Experience
 		return $this->missions;
 	}
 
-	function setMissions(ArrayCollection $missions)
+	function setMissions($missions)
 	{
 		$this->missions = $missions;
 		return $this;

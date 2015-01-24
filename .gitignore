@@ -16,3 +16,4 @@ config/autoload/*.local.php
 data/cache/*
 !data/cache/.gitkeep
 public/uploads/*
+data/DoctrineORMModule/

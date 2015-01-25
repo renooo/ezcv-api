@@ -9,6 +9,16 @@ return array(
                     'defaults' => array(
                         'controller' => 'Api\\V1\\Rest\\Employee\\Controller',
                     ),
+
+                ),
+            ),
+            'api.rest.doctrine.employee.experience' => array(
+                'type' => 'Segment',
+                'options' => array(
+                    'route' => '/api/employee/:employee_id/experience/:experience_id',
+                    'defaults' => array(
+                        'controller' => 'Api\\V1\\Rest\\Experience\\Controller',
+                    ),
                 ),
             ),
             'api.rest.doctrine.company' => array(
@@ -276,6 +286,10 @@ return array(
         ),
     ),
     'zf-hal' => array(
+        'renderer' => array(
+            'render_embedded_entities' => false,
+            //'render_collections' => false
+        ),
         'metadata_map' => array(
             'Application\\Entity\\Employee' => array(
                 'route_identifier_name' => 'employee_id',
@@ -378,7 +392,9 @@ return array(
             'entity_class' => 'Application\\Entity\\Employee',
             'object_manager' => 'doctrine.entitymanager.orm_default',
             'by_value' => true,
-            'strategies' => array(),
+            'strategies' => array(
+                'experiences' => 'ZF\\Apigility\\Doctrine\\Server\\Hydrator\\Strategy\\CollectionExtract'
+            ),
             'use_generated_hydrator' => true,
         ),
         'Api\\V1\\Rest\\Company\\CompanyHydrator' => array(
@@ -392,7 +408,10 @@ return array(
             'entity_class' => 'Application\\Entity\\Experience',
             'object_manager' => 'doctrine.entitymanager.orm_default',
             'by_value' => true,
-            'strategies' => array(),
+            'strategies' => array(
+                //'company' => 'ZF\\Apigility\\Doctrine\\Server\\Hydrator\\Strategy\\RenderEntity'
+                'missions' => 'ZF\\Apigility\\Doctrine\\Server\\Hydrator\\Strategy\\CollectionExtract'
+            ),
             'use_generated_hydrator' => true,
         ),
         'Api\\V1\\Rest\\Job\\JobHydrator' => array(
@@ -406,7 +425,9 @@ return array(
             'entity_class' => 'Application\\Entity\\Mission',
             'object_manager' => 'doctrine.entitymanager.orm_default',
             'by_value' => true,
-            'strategies' => array(),
+            'strategies' => array(
+                'tags' => 'ZF\\Apigility\\Doctrine\\Server\\Hydrator\\Strategy\\CollectionExtract'
+            ),
             'use_generated_hydrator' => true,
         ),
         'Api\\V1\\Rest\\Tag\\TagHydrator' => array(

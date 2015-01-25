@@ -49,6 +49,7 @@ class Employee
 
 	/**
 	 * @ORM\OneToMany(targetEntity="Experience", mappedBy="employee", cascade={"persist", "remove"}, orphanRemoval=true)
+	 * @ORM\OrderBy({"dateStart"="DESC"})
 	 */
 	protected $experiences;
 

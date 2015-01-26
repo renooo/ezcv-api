@@ -26,6 +26,7 @@ return array(
         'DoctrineORMModule',
         'Phpro\\DoctrineHydrationModule',
         'ZF\\Apigility\\Doctrine\\Server',
+        'ZF\\Doctrine\\QueryBuilder',
         'Api'
     ),
     'module_listener_options' => array(

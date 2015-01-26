@@ -87,7 +87,7 @@ return array(
             'route_name' => 'api.rest.doctrine.employee',
             'route_identifier_name' => 'employee_id',
             'entity_identifier_name' => 'id',
-            'collection_name' => 'employee',
+            'collection_name' => 'employees',
             'entity_http_methods' => array(
                 0 => 'GET',
                 1 => 'PATCH',
@@ -109,7 +109,7 @@ return array(
             'route_name' => 'api.rest.doctrine.company',
             'route_identifier_name' => 'company_id',
             'entity_identifier_name' => 'id',
-            'collection_name' => 'company',
+            'collection_name' => 'companies',
             'entity_http_methods' => array(
                 0 => 'GET',
                 1 => 'PATCH',
@@ -131,7 +131,7 @@ return array(
             'route_name' => 'api.rest.doctrine.experience',
             'route_identifier_name' => 'experience_id',
             'entity_identifier_name' => 'id',
-            'collection_name' => 'experience',
+            'collection_name' => 'experiences',
             'entity_http_methods' => array(
                 0 => 'GET',
                 1 => 'PATCH',
@@ -153,7 +153,7 @@ return array(
             'route_name' => 'api.rest.doctrine.job',
             'route_identifier_name' => 'job_id',
             'entity_identifier_name' => 'id',
-            'collection_name' => 'job',
+            'collection_name' => 'jobs',
             'entity_http_methods' => array(
                 0 => 'GET',
                 1 => 'PATCH',
@@ -175,7 +175,7 @@ return array(
             'route_name' => 'api.rest.doctrine.mission',
             'route_identifier_name' => 'mission_id',
             'entity_identifier_name' => 'id',
-            'collection_name' => 'mission',
+            'collection_name' => 'missions',
             'entity_http_methods' => array(
                 0 => 'GET',
                 1 => 'PATCH',
@@ -197,7 +197,7 @@ return array(
             'route_name' => 'api.rest.doctrine.tag',
             'route_identifier_name' => 'tag_id',
             'entity_identifier_name' => 'id',
-            'collection_name' => 'tag',
+            'collection_name' => 'tags',
             'entity_http_methods' => array(
                 0 => 'GET',
                 1 => 'PATCH',

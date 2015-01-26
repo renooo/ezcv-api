@@ -38,6 +38,21 @@ class Employee
 	protected $fullName;
 
 	/**
+	* @ORM\Column(type="boolean", nullable=true)
+	*/
+	protected $isCurrentlyEmployed;
+
+	/**
+	* @ORM\Column(type="string", nullable=true)
+	*/
+	protected $currentJobName;
+
+	/**
+	* @ORM\Column(type="boolean", nullable=true)
+	*/
+	protected $isLookingForAJob;	
+
+	/**
 	* @ORM\Column(type="text", nullable=true)
 	*/
 	protected $description;
@@ -82,6 +97,8 @@ class Employee
 	function __construct()
 	{
 		$this->experiences = new ArrayCollection();
+		$this->isCurrentlyEmployed = false;
+		$this->isLookingForAJob = false;
 		$this->hasDriversLicence = false;
 	}
 
@@ -127,6 +144,49 @@ class Employee
 	{
 		return $this->fullName;
 	}
+
+	function getIsCurrentlyEmployed()
+	{
+		return $this->isCurrentlyEmployed;
+	}
+
+	function setIsCurrentlyEmployed($isCurrentlyEmployed)
+	{
+		$this->isCurrentlyEmployed = $isCurrentlyEmployed;
+		return $this;
+	}
+
+	function isCurrentlyEmployed()
+	{
+		return $this->isCurrentlyEmployed();
+	}	
+
+	function getCurrentJobName()
+	{
+		return $this->currentJobName;
+	}
+
+	function setCurrentJobName($currentJobName)
+	{
+		$this->currentJobName = $currentJobName;
+		return $this;
+	}
+
+	function getIsLookingForAJob()
+	{
+		return $this->isLookingForAJob;
+	}
+
+	function setIsLookingForAJob($isLookingForAJob)
+	{
+		$this->isLookingForAJob = $isLookingForAJob;
+		return $this;
+	}
+
+	function isLookingForAJob()
+	{
+		return $this->isLookingForAJob();
+	}		
 
 	function getDescription()
 	{
@@ -247,5 +307,5 @@ class Employee
 	function hasDriversLicence()
 	{
 		return $this->getHasDriversLicence();
-	}		
+	}			
 }

@@ -9,7 +9,6 @@ return array(
                     'defaults' => array(
                         'controller' => 'Api\\V1\\Rest\\Employee\\Controller',
                     ),
-
                 ),
             ),
             'api.rest.doctrine.employee.experience' => array(
@@ -90,13 +89,10 @@ return array(
             'collection_name' => 'employees',
             'entity_http_methods' => array(
                 0 => 'GET',
-                1 => 'PATCH',
-                2 => 'PUT',
-                3 => 'DELETE',
+                1 => 'PUT',
             ),
             'collection_http_methods' => array(
                 0 => 'GET',
-                1 => 'POST',
             ),
             'collection_query_whitelist' => array(),
             'page_size' => 25,
@@ -112,9 +108,7 @@ return array(
             'collection_name' => 'companies',
             'entity_http_methods' => array(
                 0 => 'GET',
-                1 => 'PATCH',
-                2 => 'PUT',
-                3 => 'DELETE',
+                1 => 'DELETE',
             ),
             'collection_http_methods' => array(
                 0 => 'GET',
@@ -134,9 +128,8 @@ return array(
             'collection_name' => 'experiences',
             'entity_http_methods' => array(
                 0 => 'GET',
-                1 => 'PATCH',
+                1 => 'DELETE',
                 2 => 'PUT',
-                3 => 'DELETE',
             ),
             'collection_http_methods' => array(
                 0 => 'GET',
@@ -156,13 +149,9 @@ return array(
             'collection_name' => 'jobs',
             'entity_http_methods' => array(
                 0 => 'GET',
-                1 => 'PATCH',
-                2 => 'PUT',
-                3 => 'DELETE',
             ),
             'collection_http_methods' => array(
                 0 => 'GET',
-                1 => 'POST',
             ),
             'collection_query_whitelist' => array(),
             'page_size' => 25,
@@ -178,9 +167,8 @@ return array(
             'collection_name' => 'missions',
             'entity_http_methods' => array(
                 0 => 'GET',
-                1 => 'PATCH',
-                2 => 'PUT',
-                3 => 'DELETE',
+                1 => 'PUT',
+                2 => 'DELETE',
             ),
             'collection_http_methods' => array(
                 0 => 'GET',
@@ -200,13 +188,9 @@ return array(
             'collection_name' => 'tags',
             'entity_http_methods' => array(
                 0 => 'GET',
-                1 => 'PATCH',
-                2 => 'PUT',
-                3 => 'DELETE',
             ),
             'collection_http_methods' => array(
                 0 => 'GET',
-                1 => 'POST',
             ),
             'collection_query_whitelist' => array(),
             'page_size' => 25,
@@ -224,8 +208,52 @@ return array(
             'Api\\V1\\Rest\\Mission\\Controller' => 'HalJson',
             'Api\\V1\\Rest\\Tag\\Controller' => 'HalJson',
         ),
-        'accept_whitelist' => array(),
-        'content_type_whitelist' => array(),
+        'accept_whitelist' => array(
+            'Api\\V1\\Rest\\Tag\\Controller' => array(
+                0 => 'application/json',
+                1 => 'application/*+json',
+            ),
+            'Api\\V1\\Rest\\Mission\\Controller' => array(
+                0 => 'application/json',
+                1 => 'application/*+json',
+            ),
+            'Api\\V1\\Rest\\Job\\Controller' => array(
+                0 => 'application/json',
+                1 => 'application/*+json',
+            ),
+            'Api\\V1\\Rest\\Experience\\Controller' => array(
+                0 => 'application/json',
+                1 => 'application/*+json',
+            ),
+            'Api\\V1\\Rest\\Employee\\Controller' => array(
+                0 => 'application/json',
+                1 => 'application/*+json',
+            ),
+            'Api\\V1\\Rest\\Company\\Controller' => array(
+                0 => 'application/json',
+                1 => 'application/*+json',
+            ),
+        ),
+        'content_type_whitelist' => array(
+            'Api\\V1\\Rest\\Tag\\Controller' => array(
+                0 => 'application/json',
+            ),
+            'Api\\V1\\Rest\\Mission\\Controller' => array(
+                0 => 'application/json',
+            ),
+            'Api\\V1\\Rest\\Job\\Controller' => array(
+                0 => 'application/json',
+            ),
+            'Api\\V1\\Rest\\Experience\\Controller' => array(
+                0 => 'application/json',
+            ),
+            'Api\\V1\\Rest\\Employee\\Controller' => array(
+                0 => 'application/json',
+            ),
+            'Api\\V1\\Rest\\Company\\Controller' => array(
+                0 => 'application/json',
+            ),
+        ),
         'accept-whitelist' => array(
             'Api\\V1\\Rest\\Employee\\Controller' => array(
                 0 => 'application/vnd.api.v1+json',
@@ -288,7 +316,6 @@ return array(
     'zf-hal' => array(
         'renderer' => array(
             'render_embedded_entities' => false,
-            //'render_collections' => false
         ),
         'metadata_map' => array(
             'Application\\Entity\\Employee' => array(
@@ -393,7 +420,7 @@ return array(
             'object_manager' => 'doctrine.entitymanager.orm_default',
             'by_value' => true,
             'strategies' => array(
-                'experiences' => 'ZF\\Apigility\\Doctrine\\Server\\Hydrator\\Strategy\\CollectionExtract'
+                'experiences' => 'ZF\\Apigility\\Doctrine\\Server\\Hydrator\\Strategy\\CollectionExtract',
             ),
             'use_generated_hydrator' => true,
         ),
@@ -409,8 +436,7 @@ return array(
             'object_manager' => 'doctrine.entitymanager.orm_default',
             'by_value' => true,
             'strategies' => array(
-                //'company' => 'ZF\\Apigility\\Doctrine\\Server\\Hydrator\\Strategy\\RenderEntity'
-                'missions' => 'ZF\\Apigility\\Doctrine\\Server\\Hydrator\\Strategy\\CollectionExtract'
+                'missions' => 'ZF\\Apigility\\Doctrine\\Server\\Hydrator\\Strategy\\CollectionExtract',
             ),
             'use_generated_hydrator' => true,
         ),
@@ -426,7 +452,7 @@ return array(
             'object_manager' => 'doctrine.entitymanager.orm_default',
             'by_value' => true,
             'strategies' => array(
-                'tags' => 'ZF\\Apigility\\Doctrine\\Server\\Hydrator\\Strategy\\CollectionExtract'
+                'tags' => 'ZF\\Apigility\\Doctrine\\Server\\Hydrator\\Strategy\\CollectionExtract',
             ),
             'use_generated_hydrator' => true,
         ),
@@ -436,6 +462,106 @@ return array(
             'by_value' => true,
             'strategies' => array(),
             'use_generated_hydrator' => true,
+        ),
+    ),
+    'zf-mvc-auth' => array(
+        'authorization' => array(
+            'Api\\V1\\Rest\\Employee\\Controller' => array(
+                'entity' => array(
+                    'GET' => false,
+                    'POST' => false,
+                    'PATCH' => false,
+                    'PUT' => true,
+                    'DELETE' => false,
+                ),
+                'collection' => array(
+                    'GET' => false,
+                    'POST' => false,
+                    'PATCH' => false,
+                    'PUT' => false,
+                    'DELETE' => false,
+                ),
+            ),
+            'Api\\V1\\Rest\\Company\\Controller' => array(
+                'entity' => array(
+                    'GET' => false,
+                    'POST' => false,
+                    'PATCH' => false,
+                    'PUT' => false,
+                    'DELETE' => true,
+                ),
+                'collection' => array(
+                    'GET' => false,
+                    'POST' => true,
+                    'PATCH' => false,
+                    'PUT' => false,
+                    'DELETE' => false,
+                ),
+            ),
+            'Api\\V1\\Rest\\Experience\\Controller' => array(
+                'entity' => array(
+                    'GET' => false,
+                    'POST' => false,
+                    'PATCH' => false,
+                    'PUT' => true,
+                    'DELETE' => true,
+                ),
+                'collection' => array(
+                    'GET' => false,
+                    'POST' => true,
+                    'PATCH' => false,
+                    'PUT' => false,
+                    'DELETE' => false,
+                ),
+            ),
+            'Api\\V1\\Rest\\Job\\Controller' => array(
+                'entity' => array(
+                    'GET' => false,
+                    'POST' => false,
+                    'PATCH' => false,
+                    'PUT' => false,
+                    'DELETE' => false,
+                ),
+                'collection' => array(
+                    'GET' => false,
+                    'POST' => false,
+                    'PATCH' => false,
+                    'PUT' => false,
+                    'DELETE' => false,
+                ),
+            ),
+            'Api\\V1\\Rest\\Mission\\Controller' => array(
+                'entity' => array(
+                    'GET' => false,
+                    'POST' => false,
+                    'PATCH' => false,
+                    'PUT' => true,
+                    'DELETE' => true,
+                ),
+                'collection' => array(
+                    'GET' => false,
+                    'POST' => true,
+                    'PATCH' => false,
+                    'PUT' => false,
+                    'DELETE' => false,
+                ),
+            ),
+            'Api\\V1\\Rest\\Tag\\Controller' => array(
+                'entity' => array(
+                    'GET' => false,
+                    'POST' => false,
+                    'PATCH' => false,
+                    'PUT' => false,
+                    'DELETE' => false,
+                ),
+                'collection' => array(
+                    'GET' => false,
+                    'POST' => false,
+                    'PATCH' => false,
+                    'PUT' => false,
+                    'DELETE' => false,
+                ),
+            ),
         ),
     ),
 );

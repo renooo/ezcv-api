@@ -18,7 +18,12 @@ class Employee
 	protected $id;
 
 	/**
-	* @ORM\Column(type="string", nullable=true)
+	* @ORM\Column(type="string", nullable=false)
+	*/
+	protected $userName;
+
+	/**
+	* @ORM\Column(type="string", nullable=false)
 	*/
 	protected $email;
 
@@ -105,6 +110,11 @@ class Employee
 	function getId()
 	{
 		return $this->id;
+	}
+
+	function getUserName()
+	{
+		return $this->userName;
 	}
 
 	function getEmail()

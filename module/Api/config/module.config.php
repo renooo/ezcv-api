@@ -89,7 +89,7 @@ return array(
             'collection_name' => 'employees',
             'entity_http_methods' => array(
                 0 => 'GET',
-                1 => 'PUT',
+                2 => 'PATCH'
             ),
             'collection_http_methods' => array(
                 0 => 'GET',
@@ -391,14 +391,19 @@ return array(
             'Api\\V1\\Rest\\Employee\\EmployeeResource' => array(
                 'object_manager' => 'doctrine.entitymanager.orm_default',
                 'hydrator' => 'Api\\V1\\Rest\\Employee\\EmployeeHydrator',
+                'listeners' => array(
+                    'Api\V1\Rest\Employee\EmployeeListener'
+                )
             ),
             'Api\\V1\\Rest\\Company\\CompanyResource' => array(
                 'object_manager' => 'doctrine.entitymanager.orm_default',
                 'hydrator' => 'Api\\V1\\Rest\\Company\\CompanyHydrator',
+                'listeners' => array()
             ),
             'Api\\V1\\Rest\\Experience\\ExperienceResource' => array(
                 'object_manager' => 'doctrine.entitymanager.orm_default',
                 'hydrator' => 'Api\\V1\\Rest\\Experience\\ExperienceHydrator',
+                'listeners' => array()
             ),
             'Api\\V1\\Rest\\Job\\JobResource' => array(
                 'object_manager' => 'doctrine.entitymanager.orm_default',
@@ -470,8 +475,8 @@ return array(
                 'entity' => array(
                     'GET' => false,
                     'POST' => false,
-                    'PATCH' => false,
-                    'PUT' => true,
+                    'PATCH' => true,
+                    'PUT' => false,
                     'DELETE' => false,
                 ),
                 'collection' => array(
@@ -564,4 +569,38 @@ return array(
             ),
         ),
     ),
+    'zf-content-validation' => array(
+        'Api\\V1\\Rest\\Employee\\Controller' => array(
+            'PATCH' => 'Api\V1\Rest\Employee\PartialUpdateInputFilter'
+        )
+    ),
+    'input_filter_specs' => array(
+        'Api\V1\Rest\Employee\PartialUpdateInputFilter' => array(
+            'firstName' => array(
+                'required' => true,
+                'filters' => array(
+                    array('name' => 'StringTrim'),
+                ),
+                'validators' => array(
+                    array('name' => 'StringLength', 'options' => array('break_chain_on_failure' => true, 'min' => 3, 'max' => 25)),
+                    array('name' => 'Regex', 'options' => array('pattern' => '/[\p{L}\p{N} \–\']{3,25}/u'))
+                ),
+            ),
+            'lastName' => array(
+                'required' => true,
+                'filters' => array(
+                    array('name' => 'StringTrim'),
+                ),
+                'validators' => array(
+                    array('name' => 'StringLength', 'options' => array('break_chain_on_failure' => true, 'min' => 3, 'max' => 25)),
+                    array('name' => 'Regex', 'options' => array('pattern' => '/[\p{L}\p{N} \–\']{3,25}/u'))
+                ),
+            )
+        ) ,
+    ),
+    'service_manager' => array(
+        'invokables' => array(
+            'Api\V1\Rest\Employee\EmployeeListener' => 'Api\V1\Rest\Employee\EmployeeListener'
+        )
+    )
 );

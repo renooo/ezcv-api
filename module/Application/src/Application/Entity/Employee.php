@@ -7,6 +7,7 @@ use Doctrine\Common\Collection\ArrayCollection as ArrayCollection;
 
 /**
 * @ORM\Entity
+* @ORM\HasLifecycleCallbacks
 */
 class Employee
 {
@@ -317,5 +318,15 @@ class Employee
 	function hasDriversLicence()
 	{
 		return $this->getHasDriversLicence();
-	}			
+	}
+
+	/**
+	* @ORM\PrePersist
+	* @ORM\PreUpdate
+	*/
+	function updateFullName()
+	{
+		$this->fullName = $this->firstName.' '.$this->lastName;
+		return $this;
+	}		
 }

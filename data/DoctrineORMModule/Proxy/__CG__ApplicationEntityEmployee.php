@@ -64,10 +64,10 @@ class Employee extends \Application\Entity\Employee implements \Doctrine\ORM\Pro
     public function __sleep()
     {
         if ($this->__isInitialized__) {
-            return array('__isInitialized__', 'id', 'email', 'firstName', 'lastName', 'fullName', 'description', 'avatarUrl', 'experiences', 'city', 'zipCode', 'country', 'birthdate', 'hasDriversLicence');
+            return array('__isInitialized__', 'id', 'userName', 'email', 'firstName', 'lastName', 'fullName', 'isCurrentlyEmployed', 'currentJobName', 'isLookingForAJob', 'description', 'avatarUrl', 'experiences', 'city', 'zipCode', 'country', 'birthdate', 'hasDriversLicence');
         }
 
-        return array('__isInitialized__', 'id', 'email', 'firstName', 'lastName', 'fullName', 'description', 'avatarUrl', 'experiences', 'city', 'zipCode', 'country', 'birthdate', 'hasDriversLicence');
+        return array('__isInitialized__', 'id', 'userName', 'email', 'firstName', 'lastName', 'fullName', 'isCurrentlyEmployed', 'currentJobName', 'isLookingForAJob', 'description', 'avatarUrl', 'experiences', 'city', 'zipCode', 'country', 'birthdate', 'hasDriversLicence');
     }
 
     /**
@@ -191,6 +191,17 @@ class Employee extends \Application\Entity\Employee implements \Doctrine\ORM\Pro
     /**
      * {@inheritDoc}
      */
+    public function getUserName()
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getUserName', array());
+
+        return parent::getUserName();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     public function getEmail()
     {
 
@@ -263,6 +274,94 @@ class Employee extends \Application\Entity\Employee implements \Doctrine\ORM\Pro
         $this->__initializer__ && $this->__initializer__->__invoke($this, 'getFullName', array());
 
         return parent::getFullName();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getIsCurrentlyEmployed()
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getIsCurrentlyEmployed', array());
+
+        return parent::getIsCurrentlyEmployed();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function setIsCurrentlyEmployed($isCurrentlyEmployed)
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'setIsCurrentlyEmployed', array($isCurrentlyEmployed));
+
+        return parent::setIsCurrentlyEmployed($isCurrentlyEmployed);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function isCurrentlyEmployed()
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'isCurrentlyEmployed', array());
+
+        return parent::isCurrentlyEmployed();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getCurrentJobName()
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getCurrentJobName', array());
+
+        return parent::getCurrentJobName();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function setCurrentJobName($currentJobName)
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'setCurrentJobName', array($currentJobName));
+
+        return parent::setCurrentJobName($currentJobName);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getIsLookingForAJob()
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getIsLookingForAJob', array());
+
+        return parent::getIsLookingForAJob();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function setIsLookingForAJob($isLookingForAJob)
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'setIsLookingForAJob', array($isLookingForAJob));
+
+        return parent::setIsLookingForAJob($isLookingForAJob);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function isLookingForAJob()
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'isLookingForAJob', array());
+
+        return parent::isLookingForAJob();
     }
 
     /**

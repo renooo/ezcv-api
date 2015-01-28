@@ -89,7 +89,7 @@ return array(
             'collection_name' => 'employees',
             'entity_http_methods' => array(
                 0 => 'GET',
-                2 => 'PATCH'
+                2 => 'PUT'
             ),
             'collection_http_methods' => array(
                 0 => 'GET',
@@ -167,7 +167,7 @@ return array(
             'collection_name' => 'missions',
             'entity_http_methods' => array(
                 0 => 'GET',
-                1 => 'PUT',
+                1 => 'PATCH',
                 2 => 'DELETE',
             ),
             'collection_http_methods' => array(
@@ -316,6 +316,7 @@ return array(
     'zf-hal' => array(
         'renderer' => array(
             'render_embedded_entities' => false,
+            //'render_collections' => false
         ),
         'metadata_map' => array(
             'Application\\Entity\\Employee' => array(
@@ -403,7 +404,9 @@ return array(
             'Api\\V1\\Rest\\Experience\\ExperienceResource' => array(
                 'object_manager' => 'doctrine.entitymanager.orm_default',
                 'hydrator' => 'Api\\V1\\Rest\\Experience\\ExperienceHydrator',
-                'listeners' => array()
+                'listeners' => array(
+                    'Api\V1\Rest\Experience\ExperienceListener'
+                )
             ),
             'Api\\V1\\Rest\\Job\\JobResource' => array(
                 'object_manager' => 'doctrine.entitymanager.orm_default',
@@ -412,6 +415,9 @@ return array(
             'Api\\V1\\Rest\\Mission\\MissionResource' => array(
                 'object_manager' => 'doctrine.entitymanager.orm_default',
                 'hydrator' => 'Api\\V1\\Rest\\Mission\\MissionHydrator',
+                'listeners' => array(
+                    'Api\V1\Rest\Mission\MissionListener'
+                )
             ),
             'Api\\V1\\Rest\\Tag\\TagResource' => array(
                 'object_manager' => 'doctrine.entitymanager.orm_default',
@@ -539,8 +545,8 @@ return array(
                 'entity' => array(
                     'GET' => false,
                     'POST' => false,
-                    'PATCH' => false,
-                    'PUT' => true,
+                    'PATCH' => true,
+                    'PUT' => false,
                     'DELETE' => true,
                 ),
                 'collection' => array(
@@ -571,36 +577,129 @@ return array(
     ),
     'zf-content-validation' => array(
         'Api\\V1\\Rest\\Employee\\Controller' => array(
-            'PATCH' => 'Api\V1\Rest\Employee\PartialUpdateInputFilter'
+            'PUT' => 'Api\V1\Rest\Employee\UpdateInputFilter'
         )
     ),
     'input_filter_specs' => array(
-        'Api\V1\Rest\Employee\PartialUpdateInputFilter' => array(
+        'Api\V1\Rest\Employee\UpdateInputFilter' => array(
+            'id' => array(
+                'required' => true,
+            ),
             'firstName' => array(
                 'required' => true,
                 'filters' => array(
+                    array('name' => 'StripTags'),
                     array('name' => 'StringTrim'),
                 ),
                 'validators' => array(
-                    array('name' => 'StringLength', 'options' => array('break_chain_on_failure' => true, 'min' => 3, 'max' => 25)),
+                    array('name' => 'StringLength', 'options' => array('min' => 3, 'max' => 25)),
                     array('name' => 'Regex', 'options' => array('pattern' => '/[\p{L}\p{N} \–\']{3,25}/u'))
                 ),
             ),
             'lastName' => array(
                 'required' => true,
                 'filters' => array(
+                    array('name' => 'StripTags'),
                     array('name' => 'StringTrim'),
                 ),
                 'validators' => array(
-                    array('name' => 'StringLength', 'options' => array('break_chain_on_failure' => true, 'min' => 3, 'max' => 25)),
+                    array('name' => 'StringLength', 'options' => array('min' => 3, 'max' => 25)),
                     array('name' => 'Regex', 'options' => array('pattern' => '/[\p{L}\p{N} \–\']{3,25}/u'))
                 ),
-            )
+            ),
+            'email' => array(
+                'required' => true,
+                'filters' => array(
+                    array('name' => 'StripTags'),
+                    array('name' => 'StringTrim')
+                ),
+                'validators' => array(
+                    array('name' => 'EmailAddress'),                    
+                    array('name' => 'DoctrineModule\Validator\UniqueObject', 'options' => array(
+                        'object_manager' => 'doctrine.entitymanager.orm_default', 
+                        'object_repository' => 'Application\Entity\Employee', 
+                        'fields' => 'email'
+                    )), 
+                )
+            ),
+            'isCurrentlyEmployed' => array(
+                'required' => false,
+                'allow_empty' => true,
+                'filters' => array(
+                    array('name' => 'Boolean')
+                )
+            ),            
+            'isLookingForAJob' => array(
+                'required' => false,
+                'allow_empty' => true,
+                'filters' => array(
+                    array('name' => 'Boolean')
+                )
+            ),
+            'currentJobName' => array(
+                'required' => true,
+                'filters' => array(
+                    array('name' => 'StripTags'),
+                    array('name' => 'StringTrim'),
+                ),
+                'validators' => array(
+                    array('name' => 'StringLength', 'options' => array('max' => 50))
+                ),
+            ),            
+            'description' => array(
+                'required' => false,
+                'filters' => array(
+                    array('name' => 'StripTags'),
+                    array('name' => 'StringTrim'),
+                ),
+                'validators' => array(
+                    array('name' => 'StringLength', 'options' => array('max' => 500))
+                )
+            ),
+            'city' => array(
+                'required' => true,
+                'filters' => array(
+                    array('name' => 'StripTags'),
+                    array('name' => 'StringTrim'),
+                ),
+                'validators' => array(
+                    array('name' => 'StringLength', 'options' => array('max' => 50))
+                ),
+            ),
+            'zipCode' => array(
+                'required' => true,
+                'filters' => array(
+                    array('name' => 'StripTags'),
+                    array('name' => 'StringTrim'),
+                ),
+                'validators' => array(
+                    array('name' => 'Digits'),
+                    array('name' => 'StringLength', 'options' => array('max' => 10))
+                ),
+            ),            
+            'country' => array(
+                'required' => true,
+                'filters' => array(
+                    array('name' => 'StripTags'),
+                    array('name' => 'StringTrim'),
+                ),
+                'validators' => array(
+                    array('name' => 'StringLength', 'options' => array('max' => 50))
+                ),
+            ),
         ) ,
     ),
     'service_manager' => array(
         'invokables' => array(
-            'Api\V1\Rest\Employee\EmployeeListener' => 'Api\V1\Rest\Employee\EmployeeListener'
+            //listeners
+            'Api\V1\Rest\Employee\EmployeeListener' => 'Api\V1\Rest\Employee\EmployeeListener',
+            'Api\V1\Rest\Experience\ExperienceListener' => 'Api\V1\Rest\Experience\ExperienceListener',
+            'Api\V1\Rest\Mission\MissionListener' => 'Api\V1\Rest\Mission\MissionListener',
+        ),
+    ),
+    'validators' => array(
+        'factories' => array(
+            'DoctrineModule\Validator\UniqueObject' => 'Application\Validator\Service\UniqueObjectFactory' 
         )
     )
 );

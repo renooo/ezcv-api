@@ -11,15 +11,6 @@ return array(
                     ),
                 ),
             ),
-            'api.rest.doctrine.employee.experience' => array(
-                'type' => 'Segment',
-                'options' => array(
-                    'route' => '/api/employee/:employee_id/experience/:experience_id',
-                    'defaults' => array(
-                        'controller' => 'Api\\V1\\Rest\\Experience\\Controller',
-                    ),
-                ),
-            ),
             'api.rest.doctrine.company' => array(
                 'type' => 'Segment',
                 'options' => array(
@@ -577,14 +568,14 @@ return array(
     ),
     'zf-content-validation' => array(
         'Api\\V1\\Rest\\Employee\\Controller' => array(
-            'PUT' => 'Api\V1\Rest\Employee\UpdateInputFilter'
+            'input_filter' => 'Api\V1\Rest\Employee\EmployeeInputFilter'
+        ),
+        'Api\\V1\\Rest\\Experience\\Controller' => array(
+            'input_filter' => 'Api\V1\Rest\Experience\ExperienceInputFilter'
         )
     ),
     'input_filter_specs' => array(
-        'Api\V1\Rest\Employee\UpdateInputFilter' => array(
-            'id' => array(
-                'required' => true,
-            ),
+        'Api\V1\Rest\Employee\EmployeeInputFilter' => array(
             'firstName' => array(
                 'required' => true,
                 'filters' => array(
@@ -687,7 +678,80 @@ return array(
                     array('name' => 'StringLength', 'options' => array('max' => 50))
                 ),
             ),
-        ) ,
+            'birthdate' => array(
+                'required' => true,
+                'filters' => array(
+                    array('name' => 'StripTags'),
+                    array('name' => 'StringTrim'),
+                ),
+                'validators' => array(
+                    array('name' => 'Date')
+                )
+            )
+        ),
+        'Api\V1\Rest\Experience\ExperienceInputFilter' => array(
+            'description' => array(
+                'required' => false,
+                'filters' => array(
+                    array('name' => 'StripTags'),
+                    array('name' => 'StringTrim'),
+                ),
+                'validators' => array(
+                    array('name' => 'StringLength', 'options' => array('max' => 500))
+                )
+            ),
+            'dateStart' => array(
+                'required' => true,
+                'filters' => array(
+                    array('name' => 'StripTags'),
+                    array('name' => 'StringTrim'),
+                ),
+                'validators' => array(
+                    array('name' => 'Date')
+                )
+            ),
+            'dateEnd' => array(
+                'required' => false,
+                'allow_empty' => true,
+                'filters' => array(
+                    array('name' => 'StripTags'),
+                    array('name' => 'StringTrim'),
+                ),
+                'validators' => array(
+                    array('name' => 'Date')
+                )
+            ),            
+            'employee' => array(
+                'required' => true,
+                'validators' => array(
+                    array('name' => 'DoctrineModule\Validator\ObjectExists', 'options' => array(
+                        'object_manager' => 'doctrine.entitymanager.orm_default', 
+                        'object_repository' => 'Application\Entity\Employee',
+                        'fields' => 'id'
+                    ))
+                )
+            ),
+            'company' => array(
+                'required' => true,
+                'validators' => array(
+                    array('name' => 'DoctrineModule\Validator\ObjectExists', 'options' => array(
+                        'object_manager' => 'doctrine.entitymanager.orm_default', 
+                        'object_repository' => 'Application\Entity\Company',
+                        'fields' => 'id'
+                    ))
+                )
+            ),
+            'job' => array(
+                'required' => true,
+                'validators' => array(
+                    array('name' => 'DoctrineModule\Validator\ObjectExists', 'options' => array(
+                        'object_manager' => 'doctrine.entitymanager.orm_default', 
+                        'object_repository' => 'Application\Entity\Job',
+                        'fields' => 'id'
+                    ))
+                )
+            )
+        )
     ),
     'service_manager' => array(
         'invokables' => array(
@@ -699,7 +763,8 @@ return array(
     ),
     'validators' => array(
         'factories' => array(
-            'DoctrineModule\Validator\UniqueObject' => 'Application\Validator\Service\UniqueObjectFactory' 
+            'DoctrineModule\Validator\UniqueObject' => 'Application\Validator\Service\UniqueObjectFactory',
+            'DoctrineModule\Validator\ObjectExists' => 'Application\Validator\Service\ObjectExistsFactory' 
         )
     )
 );

@@ -595,4 +595,15 @@ class Employee extends \Application\Entity\Employee implements \Doctrine\ORM\Pro
         return parent::hasDriversLicence();
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    public function updateFullName()
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'updateFullName', array());
+
+        return parent::updateFullName();
+    }
+
 }

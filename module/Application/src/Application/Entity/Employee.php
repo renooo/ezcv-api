@@ -3,7 +3,7 @@
 namespace Application\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use Doctrine\Common\Collection\ArrayCollection as ArrayCollection;
+use Doctrine\Common\Collections\ArrayCollection as ArrayCollection;
 
 /**
 * @ORM\Entity

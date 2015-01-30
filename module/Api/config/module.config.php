@@ -1,5 +1,12 @@
 <?php
 return array(
+    'service_manager' => array(
+        'invokables' => array(
+            'Api\\V1\\Rest\\Employee\\EmployeeListener' => 'Api\\V1\\Rest\\Employee\\EmployeeListener',
+            'Api\\V1\\Rest\\Experience\\ExperienceListener' => 'Api\\V1\\Rest\\Experience\\ExperienceListener',
+            'Api\\V1\\Rest\\Mission\\MissionListener' => 'Api\\V1\\Rest\\Mission\\MissionListener',
+        ),
+    ),
     'router' => array(
         'routes' => array(
             'api.rest.doctrine.employee' => array(
@@ -56,6 +63,25 @@ return array(
                     ),
                 ),
             ),
+            'api.rpc.register' => array(
+                'type' => 'Segment',
+                'options' => array(
+                    'route' => '/register',
+                    'defaults' => array(
+                        'controller' => 'Api\\V1\\Rpc\\Register\\Controller',
+                        'action' => 'register',
+                    ),
+                ),
+            ),
+            'api.rest.doctrine.country' => array(
+                'type' => 'Segment',
+                'options' => array(
+                    'route' => '/api/country[/:country_id]',
+                    'defaults' => array(
+                        'controller' => 'Api\\V1\\Rest\\Country\\Controller',
+                    ),
+                ),
+            ),
         ),
     ),
     'zf-versioning' => array(
@@ -66,10 +92,9 @@ return array(
             3 => 'api.rest.doctrine.job',
             4 => 'api.rest.doctrine.mission',
             5 => 'api.rest.doctrine.tag',
+            6 => 'api.rpc.register',
+            7 => 'api.rest.doctrine.country',
         ),
-    ),
-    'service_manager' => array(
-        'factories' => array(),
     ),
     'zf-rest' => array(
         'Api\\V1\\Rest\\Employee\\Controller' => array(
@@ -80,7 +105,7 @@ return array(
             'collection_name' => 'employees',
             'entity_http_methods' => array(
                 0 => 'GET',
-                2 => 'PUT'
+                2 => 'PUT',
             ),
             'collection_http_methods' => array(
                 0 => 'GET',
@@ -189,6 +214,24 @@ return array(
             'entity_class' => 'Application\\Entity\\Tag',
             'collection_class' => 'Api\\V1\\Rest\\Tag\\TagCollection',
         ),
+        'Api\\V1\\Rest\\Country\\Controller' => array(
+            'listener' => 'Api\\V1\\Rest\\Country\\CountryResource',
+            'route_name' => 'api.rest.doctrine.country',
+            'route_identifier_name' => 'country_id',
+            'entity_identifier_name' => 'id',
+            'collection_name' => 'countries',
+            'entity_http_methods' => array(
+                0 => 'GET',
+            ),
+            'collection_http_methods' => array(
+                0 => 'GET',
+            ),
+            'collection_query_whitelist' => array(),
+            'page_size' => 250,
+            'page_size_param' => 'limit',
+            'entity_class' => 'Application\\Entity\\Country',
+            'collection_class' => 'Api\\V1\\Rest\\Country\\CountryCollection',
+        ),
     ),
     'zf-content-negotiation' => array(
         'controllers' => array(
@@ -198,6 +241,8 @@ return array(
             'Api\\V1\\Rest\\Job\\Controller' => 'HalJson',
             'Api\\V1\\Rest\\Mission\\Controller' => 'HalJson',
             'Api\\V1\\Rest\\Tag\\Controller' => 'HalJson',
+            'Api\\V1\\Rpc\\Register\\Controller' => 'Json',
+            'Api\\V1\\Rest\\Country\\Controller' => 'HalJson',
         ),
         'accept_whitelist' => array(
             'Api\\V1\\Rest\\Tag\\Controller' => array(
@@ -224,6 +269,11 @@ return array(
                 0 => 'application/json',
                 1 => 'application/*+json',
             ),
+            'Api\\V1\\Rpc\\Register\\Controller' => array(
+                0 => 'application/vnd.api.v1+json',
+                1 => 'application/json',
+                2 => 'application/*+json',
+            ),
         ),
         'content_type_whitelist' => array(
             'Api\\V1\\Rest\\Tag\\Controller' => array(
@@ -243,6 +293,10 @@ return array(
             ),
             'Api\\V1\\Rest\\Company\\Controller' => array(
                 0 => 'application/json',
+            ),
+            'Api\\V1\\Rpc\\Register\\Controller' => array(
+                0 => 'application/vnd.api.v1+json',
+                1 => 'application/json',
             ),
         ),
         'accept-whitelist' => array(
@@ -276,6 +330,11 @@ return array(
                 1 => 'application/hal+json',
                 2 => 'application/json',
             ),
+            'Api\\V1\\Rest\\Country\\Controller' => array(
+                0 => 'application/vnd.api.v1+json',
+                1 => 'application/hal+json',
+                2 => 'application/json',
+            ),
         ),
         'content-type-whitelist' => array(
             'Api\\V1\\Rest\\Employee\\Controller' => array(
@@ -302,12 +361,15 @@ return array(
                 0 => 'application/vnd.api.v1+json',
                 1 => 'application/json',
             ),
+            'Api\\V1\\Rest\\Country\\Controller' => array(
+                0 => 'application/vnd.api.v1+json',
+                1 => 'application/json',
+            ),
         ),
     ),
     'zf-hal' => array(
         'renderer' => array(
             'render_embedded_entities' => false,
-            //'render_collections' => false
         ),
         'metadata_map' => array(
             'Application\\Entity\\Employee' => array(
@@ -376,6 +438,17 @@ return array(
                 'route_name' => 'api.rest.doctrine.tag',
                 'is_collection' => true,
             ),
+            'Application\\Entity\\Country' => array(
+                'route_identifier_name' => 'country_id',
+                'entity_identifier_name' => 'id',
+                'route_name' => 'api.rest.doctrine.country',
+                'hydrator' => 'Api\\V1\\Rest\\Country\\CountryHydrator',
+            ),
+            'Api\\V1\\Rest\\Country\\CountryCollection' => array(
+                'entity_identifier_name' => 'id',
+                'route_name' => 'api.rest.doctrine.country',
+                'is_collection' => true,
+            ),
         ),
     ),
     'zf-apigility' => array(
@@ -384,20 +457,20 @@ return array(
                 'object_manager' => 'doctrine.entitymanager.orm_default',
                 'hydrator' => 'Api\\V1\\Rest\\Employee\\EmployeeHydrator',
                 'listeners' => array(
-                    'Api\V1\Rest\Employee\EmployeeListener'
-                )
+                    0 => 'Api\\V1\\Rest\\Employee\\EmployeeListener',
+                ),
             ),
             'Api\\V1\\Rest\\Company\\CompanyResource' => array(
                 'object_manager' => 'doctrine.entitymanager.orm_default',
                 'hydrator' => 'Api\\V1\\Rest\\Company\\CompanyHydrator',
-                'listeners' => array()
+                'listeners' => array(),
             ),
             'Api\\V1\\Rest\\Experience\\ExperienceResource' => array(
                 'object_manager' => 'doctrine.entitymanager.orm_default',
                 'hydrator' => 'Api\\V1\\Rest\\Experience\\ExperienceHydrator',
                 'listeners' => array(
-                    'Api\V1\Rest\Experience\ExperienceListener'
-                )
+                    0 => 'Api\\V1\\Rest\\Experience\\ExperienceListener',
+                ),
             ),
             'Api\\V1\\Rest\\Job\\JobResource' => array(
                 'object_manager' => 'doctrine.entitymanager.orm_default',
@@ -407,12 +480,16 @@ return array(
                 'object_manager' => 'doctrine.entitymanager.orm_default',
                 'hydrator' => 'Api\\V1\\Rest\\Mission\\MissionHydrator',
                 'listeners' => array(
-                    'Api\V1\Rest\Mission\MissionListener'
-                )
+                    0 => 'Api\\V1\\Rest\\Mission\\MissionListener',
+                ),
             ),
             'Api\\V1\\Rest\\Tag\\TagResource' => array(
                 'object_manager' => 'doctrine.entitymanager.orm_default',
                 'hydrator' => 'Api\\V1\\Rest\\Tag\\TagHydrator',
+            ),
+            'Api\\V1\\Rest\\Country\\CountryResource' => array(
+                'object_manager' => 'doctrine.entitymanager.orm_default',
+                'hydrator' => 'Api\\V1\\Rest\\Country\\CountryHydrator',
             ),
         ),
     ),
@@ -460,6 +537,13 @@ return array(
         ),
         'Api\\V1\\Rest\\Tag\\TagHydrator' => array(
             'entity_class' => 'Application\\Entity\\Tag',
+            'object_manager' => 'doctrine.entitymanager.orm_default',
+            'by_value' => true,
+            'strategies' => array(),
+            'use_generated_hydrator' => true,
+        ),
+        'Api\\V1\\Rest\\Country\\CountryHydrator' => array(
+            'entity_class' => 'Application\\Entity\\Country',
             'object_manager' => 'doctrine.entitymanager.orm_default',
             'by_value' => true,
             'strategies' => array(),
@@ -568,203 +652,637 @@ return array(
     ),
     'zf-content-validation' => array(
         'Api\\V1\\Rest\\Employee\\Controller' => array(
-            'input_filter' => 'Api\V1\Rest\Employee\EmployeeInputFilter'
+            'input_filter' => 'Api\\V1\\Rest\\Employee\\EmployeeInputFilter',
         ),
         'Api\\V1\\Rest\\Experience\\Controller' => array(
-            'input_filter' => 'Api\V1\Rest\Experience\ExperienceInputFilter'
-        )
+            'input_filter' => 'Api\\V1\\Rest\\Experience\\ExperienceInputFilter',
+        ),
+        'Api\\V1\\Rpc\\Register\\Controller' => array(
+            'input_filter' => 'Api\\V1\\Rpc\\Register\\RegisterInputFilter',
+        ),
     ),
     'input_filter_specs' => array(
-        'Api\V1\Rest\Employee\EmployeeInputFilter' => array(
+        'Api\\V1\\Rest\\Employee\\EmployeeInputFilter' => array(
+            'id' => array(
+                'name' => 'id',
+                'required' => false,
+                'allow_empty' => true,
+                'filters' => array(
+                    0 => array(
+                        'name' => 'Int',
+                    ),
+                ),
+            ),
             'firstName' => array(
+                'name' => 'firstName',
                 'required' => true,
                 'filters' => array(
-                    array('name' => 'StripTags'),
-                    array('name' => 'StringTrim'),
+                    0 => array(
+                        'name' => 'StripTags',
+                    ),
+                    1 => array(
+                        'name' => 'StringTrim',
+                    ),
                 ),
                 'validators' => array(
-                    array('name' => 'StringLength', 'options' => array('min' => 3, 'max' => 25)),
-                    array('name' => 'Regex', 'options' => array('pattern' => '/[\p{L}\p{N} \–\']{3,25}/u'))
+                    0 => array(
+                        'name' => 'StringLength',
+                        'options' => array(
+                            'min' => 3,
+                            'max' => 25,
+                        ),
+                    ),
+                    1 => array(
+                        'name' => 'Regex',
+                        'options' => array(
+                            'pattern' => '/[\\p{L}\\p{N} \\–\']{3,25}/u',
+                        ),
+                    ),
                 ),
             ),
             'lastName' => array(
+                'name' => 'lastName',
                 'required' => true,
                 'filters' => array(
-                    array('name' => 'StripTags'),
-                    array('name' => 'StringTrim'),
+                    0 => array(
+                        'name' => 'StripTags',
+                    ),
+                    1 => array(
+                        'name' => 'StringTrim',
+                    ),
                 ),
                 'validators' => array(
-                    array('name' => 'StringLength', 'options' => array('min' => 3, 'max' => 25)),
-                    array('name' => 'Regex', 'options' => array('pattern' => '/[\p{L}\p{N} \–\']{3,25}/u'))
+                    0 => array(
+                        'name' => 'StringLength',
+                        'options' => array(
+                            'min' => 3,
+                            'max' => 25,
+                        ),
+                    ),
+                    1 => array(
+                        'name' => 'Regex',
+                        'options' => array(
+                            'pattern' => '/[\\p{L}\\p{N} \\–\']{3,25}/u',
+                        ),
+                    ),
                 ),
             ),
             'email' => array(
+                'name' => 'email',
                 'required' => true,
                 'filters' => array(
-                    array('name' => 'StripTags'),
-                    array('name' => 'StringTrim')
+                    0 => array(
+                        'name' => 'StripTags',
+                    ),
+                    1 => array(
+                        'name' => 'StringTrim',
+                    ),
                 ),
                 'validators' => array(
-                    array('name' => 'EmailAddress'),                    
-                    array('name' => 'DoctrineModule\Validator\UniqueObject', 'options' => array(
-                        'object_manager' => 'doctrine.entitymanager.orm_default', 
-                        'object_repository' => 'Application\Entity\Employee', 
-                        'fields' => 'email'
-                    )), 
-                )
+                    0 => array(
+                        'name' => 'EmailAddress',
+                    ),
+                    1 => array(
+                        'name' => 'DoctrineModule\\Validator\\UniqueObject',
+                        'options' => array(
+                            'object_manager' => 'doctrine.entitymanager.orm_default',
+                            'object_repository' => 'Application\\Entity\\Employee',
+                            'fields' => 'email',
+                        ),
+                    ),
+                ),
             ),
             'isCurrentlyEmployed' => array(
+                'name' => 'isCurrentlyEmployed',
                 'required' => false,
                 'allow_empty' => true,
                 'filters' => array(
-                    array('name' => 'Boolean')
-                )
-            ),            
+                    0 => array(
+                        'name' => 'Boolean',
+                    ),
+                ),
+            ),
             'isLookingForAJob' => array(
+                'name' => 'isLookingForAJob',
                 'required' => false,
                 'allow_empty' => true,
                 'filters' => array(
-                    array('name' => 'Boolean')
-                )
+                    0 => array(
+                        'name' => 'Boolean',
+                    ),
+                ),
             ),
             'currentJobName' => array(
+                'name' => 'currentJobName',
                 'required' => true,
                 'filters' => array(
-                    array('name' => 'StripTags'),
-                    array('name' => 'StringTrim'),
+                    0 => array(
+                        'name' => 'StripTags',
+                    ),
+                    1 => array(
+                        'name' => 'StringTrim',
+                    ),
                 ),
                 'validators' => array(
-                    array('name' => 'StringLength', 'options' => array('max' => 50))
+                    0 => array(
+                        'name' => 'StringLength',
+                        'options' => array(
+                            'max' => 50,
+                        ),
+                    ),
                 ),
-            ),            
+            ),
             'description' => array(
+                'name' => 'description',
                 'required' => false,
                 'filters' => array(
-                    array('name' => 'StripTags'),
-                    array('name' => 'StringTrim'),
+                    0 => array(
+                        'name' => 'StripTags',
+                    ),
+                    1 => array(
+                        'name' => 'StringTrim',
+                    ),
                 ),
                 'validators' => array(
-                    array('name' => 'StringLength', 'options' => array('max' => 500))
-                )
+                    0 => array(
+                        'name' => 'StringLength',
+                        'options' => array(
+                            'max' => 500,
+                        ),
+                    ),
+                ),
             ),
             'city' => array(
+                'name' => 'city',
                 'required' => true,
                 'filters' => array(
-                    array('name' => 'StripTags'),
-                    array('name' => 'StringTrim'),
+                    0 => array(
+                        'name' => 'StripTags',
+                    ),
+                    1 => array(
+                        'name' => 'StringTrim',
+                    ),
                 ),
                 'validators' => array(
-                    array('name' => 'StringLength', 'options' => array('max' => 50))
+                    0 => array(
+                        'name' => 'StringLength',
+                        'options' => array(
+                            'max' => 50,
+                        ),
+                    ),
                 ),
             ),
             'zipCode' => array(
+                'name' => 'zipCode',
                 'required' => true,
                 'filters' => array(
-                    array('name' => 'StripTags'),
-                    array('name' => 'StringTrim'),
+                    0 => array(
+                        'name' => 'StripTags',
+                    ),
+                    1 => array(
+                        'name' => 'StringTrim',
+                    ),
                 ),
                 'validators' => array(
-                    array('name' => 'Digits'),
-                    array('name' => 'StringLength', 'options' => array('max' => 10))
+                    0 => array(
+                        'name' => 'Digits',
+                    ),
+                    1 => array(
+                        'name' => 'StringLength',
+                        'options' => array(
+                            'max' => 10,
+                        ),
+                    ),
                 ),
-            ),            
+            ),
             'country' => array(
+                'name' => 'country',
                 'required' => true,
-                'filters' => array(
-                    array('name' => 'StripTags'),
-                    array('name' => 'StringTrim'),
-                ),
                 'validators' => array(
-                    array('name' => 'StringLength', 'options' => array('max' => 50))
+                    array(
+                        'name' => 'DoctrineModule\\Validator\\ObjectExists',
+                        'options' => array(
+                            'object_manager' => 'doctrine.entitymanager.orm_default',
+                            'object_repository' => 'Application\\Entity\\Country',
+                            'fields' => 'id',
+                        ),
+                    ),
                 ),
             ),
             'birthdate' => array(
+                'name' => 'birthdate',
                 'required' => true,
                 'filters' => array(
-                    array('name' => 'StripTags'),
-                    array('name' => 'StringTrim'),
+                    0 => array(
+                        'name' => 'StripTags',
+                    ),
+                    1 => array(
+                        'name' => 'StringTrim',
+                    ),
                 ),
                 'validators' => array(
-                    array('name' => 'Date')
-                )
-            )
+                    0 => array(
+                        'name' => 'Date',
+                    ),
+                ),
+            ),
         ),
-        'Api\V1\Rest\Experience\ExperienceInputFilter' => array(
+        'Api\\V1\\Rpc\\Register\\RegisterInputFilter' => array(
+            'id' => array(
+                'name' => 'id',
+                'required' => false,
+                'allow_empty' => true,
+                'filters' => array(
+                    0 => array(
+                        'name' => 'Int',
+                    ),
+                ),
+            ),
+            'firstName' => array(
+                'name' => 'firstName',
+                'required' => true,
+                'filters' => array(
+                    0 => array(
+                        'name' => 'StripTags',
+                    ),
+                    1 => array(
+                        'name' => 'StringTrim',
+                    ),
+                ),
+                'validators' => array(
+                    0 => array(
+                        'name' => 'StringLength',
+                        'options' => array(
+                            'min' => 3,
+                            'max' => 25,
+                        ),
+                    ),
+                    1 => array(
+                        'name' => 'Regex',
+                        'options' => array(
+                            'pattern' => '/[\\p{L}\\p{N} \\–\']{3,25}/u',
+                        ),
+                    ),
+                ),
+            ),
+            'lastName' => array(
+                'name' => 'lastName',
+                'required' => true,
+                'filters' => array(
+                    0 => array(
+                        'name' => 'StripTags',
+                    ),
+                    1 => array(
+                        'name' => 'StringTrim',
+                    ),
+                ),
+                'validators' => array(
+                    0 => array(
+                        'name' => 'StringLength',
+                        'options' => array(
+                            'min' => 3,
+                            'max' => 25,
+                        ),
+                    ),
+                    1 => array(
+                        'name' => 'Regex',
+                        'options' => array(
+                            'pattern' => '/[\\p{L}\\p{N} \\–\']{3,25}/u',
+                        ),
+                    ),
+                ),
+            ),
+            'email' => array(
+                'name' => 'email',
+                'required' => true,
+                'filters' => array(
+                    0 => array(
+                        'name' => 'StripTags',
+                    ),
+                    1 => array(
+                        'name' => 'StringTrim',
+                    ),
+                ),
+                'validators' => array(
+                    0 => array(
+                        'name' => 'EmailAddress',
+                    ),
+                    1 => array(
+                        'name' => 'DoctrineModule\\Validator\\UniqueObject',
+                        'options' => array(
+                            'object_manager' => 'doctrine.entitymanager.orm_default',
+                            'object_repository' => 'Application\\Entity\\Employee',
+                            'fields' => 'email',
+                        ),
+                    ),
+                ),
+            ),
+            'isCurrentlyEmployed' => array(
+                'name' => 'isCurrentlyEmployed',
+                'required' => false,
+                'allow_empty' => true,
+                'filters' => array(
+                    0 => array(
+                        'name' => 'Boolean',
+                    ),
+                ),
+            ),
+            'isLookingForAJob' => array(
+                'name' => 'isLookingForAJob',
+                'required' => false,
+                'allow_empty' => true,
+                'filters' => array(
+                    0 => array(
+                        'name' => 'Boolean',
+                    ),
+                ),
+            ),
+            'currentJobName' => array(
+                'name' => 'currentJobName',
+                'required' => true,
+                'filters' => array(
+                    0 => array(
+                        'name' => 'StripTags',
+                    ),
+                    1 => array(
+                        'name' => 'StringTrim',
+                    ),
+                ),
+                'validators' => array(
+                    0 => array(
+                        'name' => 'StringLength',
+                        'options' => array(
+                            'max' => 50,
+                        ),
+                    ),
+                ),
+            ),
+            'description' => array(
+                'name' => 'description',
+                'required' => false,
+                'filters' => array(
+                    0 => array(
+                        'name' => 'StripTags',
+                    ),
+                    1 => array(
+                        'name' => 'StringTrim',
+                    ),
+                ),
+                'validators' => array(
+                    0 => array(
+                        'name' => 'StringLength',
+                        'options' => array(
+                            'max' => 500,
+                        ),
+                    ),
+                ),
+            ),
+            'city' => array(
+                'name' => 'city',
+                'required' => true,
+                'filters' => array(
+                    0 => array(
+                        'name' => 'StripTags',
+                    ),
+                    1 => array(
+                        'name' => 'StringTrim',
+                    ),
+                ),
+                'validators' => array(
+                    0 => array(
+                        'name' => 'StringLength',
+                        'options' => array(
+                            'max' => 50,
+                        ),
+                    ),
+                ),
+            ),
+            'zipCode' => array(
+                'name' => 'zipCode',
+                'required' => true,
+                'filters' => array(
+                    0 => array(
+                        'name' => 'StripTags',
+                    ),
+                    1 => array(
+                        'name' => 'StringTrim',
+                    ),
+                ),
+                'validators' => array(
+                    0 => array(
+                        'name' => 'Digits',
+                    ),
+                    1 => array(
+                        'name' => 'StringLength',
+                        'options' => array(
+                            'max' => 10,
+                        ),
+                    ),
+                ),
+            ),
+            'country' => array(
+                'name' => 'country',
+                'required' => true,                
+                'validators' => array(
+                    array(
+                        'name' => 'DoctrineModule\\Validator\\ObjectExists',
+                        'options' => array(
+                            'object_manager' => 'doctrine.entitymanager.orm_default',
+                            'object_repository' => 'Application\\Entity\\Country',
+                            'fields' => 'id',
+                        ),
+                    ),
+                ),
+            ),
+            'birthdate' => array(
+                'name' => 'birthdate',
+                'required' => true,
+                'filters' => array(
+                    0 => array(
+                        'name' => 'StripTags',
+                    ),
+                    1 => array(
+                        'name' => 'StringTrim',
+                    ),
+                ),
+                'validators' => array(
+                    0 => array(
+                        'name' => 'Date',
+                    ),
+                ),
+            ),
+            'userName' => array(
+                'name' => 'userName',
+                'filters' => array(
+                    0 => array(
+                        'name' => 'StripTags',
+                    ),
+                    1 => array(
+                        'name' => 'StringTrim',
+                    ),
+                    2 => array(
+                        'name' => 'StringToLower',
+                    ),
+                ),
+                'validators' => array(
+                    0 => array(
+                        'name' => 'Regex',
+                        'options' => array(
+                            'pattern' => '/^[a-z]+[a-z\\-\\.]*[a-z]+$/',
+                        ),
+                    ),
+                    1 => array(
+                        'name' => 'DoctrineModule\\Validator\\UniqueObject',
+                        'options' => array(
+                            'object_manager' => 'doctrine.entitymanager.orm_default',
+                            'object_repository' => 'Application\\Entity\\OAuthUser',
+                            'fields' => 'userName',
+                        ),
+                    ),
+                ),
+            ),
+            'password' => array(
+                'name' => 'password',
+                'required' => true,
+                'validators' => array(
+                    0 => array(
+                        'name' => 'NotEmpty',
+                        'options' => array(
+                            'break_chain_on_failure' => true,
+                            'messages' => array(
+                                'isEmpty' => 'Le mot de passe est obligatoire.',
+                            ),
+                        ),
+                    ),
+                    1 => array(
+                        'name' => 'StringLength',
+                        'options' => array(
+                            'min' => 6,
+                            'max' => 30,
+                        ),
+                    ),
+                    2 => array(
+                        'name' => 'Application\\Validator\\PasswordStrength',
+                    ),
+                    3 => array(
+                        'name' => 'Identical',
+                        'options' => array(
+                            'token' => 'passwordConfirm',
+                        ),
+                    ),
+                ),
+            ),
+            'passwordConfirm' => array(
+                'name' => 'passwordConfirm',
+                'required' => true,
+            ),
+        ),
+        'Api\\V1\\Rest\\Experience\\ExperienceInputFilter' => array(
             'description' => array(
                 'required' => false,
                 'filters' => array(
-                    array('name' => 'StripTags'),
-                    array('name' => 'StringTrim'),
+                    0 => array(
+                        'name' => 'StripTags',
+                    ),
+                    1 => array(
+                        'name' => 'StringTrim',
+                    ),
                 ),
                 'validators' => array(
-                    array('name' => 'StringLength', 'options' => array('max' => 500))
-                )
+                    0 => array(
+                        'name' => 'StringLength',
+                        'options' => array(
+                            'max' => 500,
+                        ),
+                    ),
+                ),
             ),
             'dateStart' => array(
                 'required' => true,
                 'filters' => array(
-                    array('name' => 'StripTags'),
-                    array('name' => 'StringTrim'),
+                    0 => array(
+                        'name' => 'StripTags',
+                    ),
+                    1 => array(
+                        'name' => 'StringTrim',
+                    ),
                 ),
                 'validators' => array(
-                    array('name' => 'Date')
-                )
+                    0 => array(
+                        'name' => 'Date',
+                    ),
+                ),
             ),
             'dateEnd' => array(
                 'required' => false,
                 'allow_empty' => true,
                 'filters' => array(
-                    array('name' => 'StripTags'),
-                    array('name' => 'StringTrim'),
+                    0 => array(
+                        'name' => 'StripTags',
+                    ),
+                    1 => array(
+                        'name' => 'StringTrim',
+                    ),
                 ),
                 'validators' => array(
-                    array('name' => 'Date')
-                )
-            ),            
+                    0 => array(
+                        'name' => 'Date',
+                    ),
+                ),
+            ),
             'employee' => array(
                 'required' => true,
                 'validators' => array(
-                    array('name' => 'DoctrineModule\Validator\ObjectExists', 'options' => array(
-                        'object_manager' => 'doctrine.entitymanager.orm_default', 
-                        'object_repository' => 'Application\Entity\Employee',
-                        'fields' => 'id'
-                    ))
-                )
+                    0 => array(
+                        'name' => 'DoctrineModule\\Validator\\ObjectExists',
+                        'options' => array(
+                            'object_manager' => 'doctrine.entitymanager.orm_default',
+                            'object_repository' => 'Application\\Entity\\Employee',
+                            'fields' => 'id',
+                        ),
+                    ),
+                ),
             ),
             'company' => array(
                 'required' => true,
                 'validators' => array(
-                    array('name' => 'DoctrineModule\Validator\ObjectExists', 'options' => array(
-                        'object_manager' => 'doctrine.entitymanager.orm_default', 
-                        'object_repository' => 'Application\Entity\Company',
-                        'fields' => 'id'
-                    ))
-                )
+                    0 => array(
+                        'name' => 'DoctrineModule\\Validator\\ObjectExists',
+                        'options' => array(
+                            'object_manager' => 'doctrine.entitymanager.orm_default',
+                            'object_repository' => 'Application\\Entity\\Company',
+                            'fields' => 'id',
+                        ),
+                    ),
+                ),
             ),
             'job' => array(
                 'required' => true,
                 'validators' => array(
-                    array('name' => 'DoctrineModule\Validator\ObjectExists', 'options' => array(
-                        'object_manager' => 'doctrine.entitymanager.orm_default', 
-                        'object_repository' => 'Application\Entity\Job',
-                        'fields' => 'id'
-                    ))
-                )
-            )
-        )
-    ),
-    'service_manager' => array(
-        'invokables' => array(
-            //listeners
-            'Api\V1\Rest\Employee\EmployeeListener' => 'Api\V1\Rest\Employee\EmployeeListener',
-            'Api\V1\Rest\Experience\ExperienceListener' => 'Api\V1\Rest\Experience\ExperienceListener',
-            'Api\V1\Rest\Mission\MissionListener' => 'Api\V1\Rest\Mission\MissionListener',
+                    0 => array(
+                        'name' => 'DoctrineModule\\Validator\\ObjectExists',
+                        'options' => array(
+                            'object_manager' => 'doctrine.entitymanager.orm_default',
+                            'object_repository' => 'Application\\Entity\\Job',
+                            'fields' => 'id',
+                        ),
+                    ),
+                ),
+            ),
         ),
     ),
-    'validators' => array(
+    'controllers' => array(
         'factories' => array(
-            'DoctrineModule\Validator\UniqueObject' => 'Application\Validator\Service\UniqueObjectFactory',
-            'DoctrineModule\Validator\ObjectExists' => 'Application\Validator\Service\ObjectExistsFactory' 
-        )
-    )
+            'Api\\V1\\Rpc\\Register\\Controller' => 'Api\\V1\\Rpc\\Register\\RegisterControllerFactory',
+        ),
+    ),
+    'zf-rpc' => array(
+        'Api\\V1\\Rpc\\Register\\Controller' => array(
+            'service_name' => 'Register',
+            'http_methods' => array(
+                0 => 'POST',
+            ),
+            'route_name' => 'api.rpc.register',
+        ),
+    ),
 );

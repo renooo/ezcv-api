@@ -26,6 +26,20 @@ return array(
             )
         )
     ),
+    'validators' => array(
+        'factories' => array(
+            'DoctrineModule\Validator\UniqueObject' => 'Application\Validator\Service\UniqueObjectFactory',
+            'DoctrineModule\Validator\ObjectExists' => 'Application\Validator\Service\ObjectExistsFactory' 
+        ),
+        'invokables' => array(
+            'Application\Validator\PasswordStrength' => 'Application\Validator\PasswordStrength'    
+        )
+    ),
+    'filters' => array(
+        'invokables' => array(
+            'Application\Filter\Bcrypt' => 'Application\Filter\Bcrypt' 
+        )
+    ),
     'router' => array(
         'routes' => array(
             'home' => array(

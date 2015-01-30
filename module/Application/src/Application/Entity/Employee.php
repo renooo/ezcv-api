@@ -85,9 +85,14 @@ class Employee
 	protected $zipCode;
 
 	/**
-	* @ORM\Column(type="string", nullable=false)
+	* @ORM\ManyToOne(targetEntity="Country")
 	*/
 	protected $country;
+
+	/**
+	* @ORM\Column(type="string", nullable=false)
+	*/
+	protected $countryName;
 
 	/**
 	* @ORM\Column(type="date", nullable=false)
@@ -293,6 +298,11 @@ class Employee
 		return $this;
 	}
 
+	function getCountryName()
+	{
+		return $this->country;
+	}
+
 	function getBirthdate()
 	{
 		return $this->birthdate;
@@ -328,5 +338,15 @@ class Employee
 	{
 		$this->fullName = $this->firstName.' '.$this->lastName;
 		return $this;
-	}		
+	}
+
+	/**
+	* @ORM\PrePersist
+	* @ORM\PreUpdate
+	*/
+	function updateCoutryName()
+	{
+		$this->countryName = $this->country->getName();
+		return $this;
+	}			
 }

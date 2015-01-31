@@ -27,13 +27,12 @@ return array(
         )
     ),
     'validators' => array(
-        'factories' => array(
-            'DoctrineModule\Validator\UniqueObject' => 'Application\Validator\Service\UniqueObjectFactory',
-            'DoctrineModule\Validator\ObjectExists' => 'Application\Validator\Service\ObjectExistsFactory' 
-        ),
         'invokables' => array(
             'Application\Validator\PasswordStrength' => 'Application\Validator\PasswordStrength'    
-        )
+        ),
+        'abstract_factories' => array(
+            'Application\Validator\Service\DoctrineValidatorAbstractFactory',
+        ),
     ),
     'filters' => array(
         'invokables' => array(

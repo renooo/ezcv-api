@@ -888,16 +888,6 @@ return array(
             ),
         ),
         'Api\\V1\\Rpc\\Register\\RegisterInputFilter' => array(
-            'id' => array(
-                'name' => 'id',
-                'required' => false,
-                'allow_empty' => true,
-                'filters' => array(
-                    0 => array(
-                        'name' => 'Int',
-                    ),
-                ),
-            ),
             'firstName' => array(
                 'name' => 'firstName',
                 'required' => true,
@@ -913,6 +903,7 @@ return array(
                     0 => array(
                         'name' => 'StringLength',
                         'options' => array(
+                            'break_chain_on_failure' => true,
                             'min' => 3,
                             'max' => 25,
                         ),
@@ -940,6 +931,7 @@ return array(
                     0 => array(
                         'name' => 'StringLength',
                         'options' => array(
+                            'break_chain_on_failure' => true,
                             'min' => 3,
                             'max' => 25,
                         ),
@@ -966,13 +958,19 @@ return array(
                 'validators' => array(
                     0 => array(
                         'name' => 'EmailAddress',
+                        'options' => array(
+                            'break_chain_on_failure' => true,
+                        )
                     ),
                     1 => array(
-                        'name' => 'DoctrineModule\\Validator\\UniqueObject',
+                        'name' => 'DoctrineModule\Validator\NoObjectExists',
                         'options' => array(
                             'object_manager' => 'doctrine.entitymanager.orm_default',
                             'object_repository' => 'Application\\Entity\\Employee',
                             'fields' => 'email',
+                            'messages' => array(
+                                'objectFound' => 'Cette adresse email existe déjà.'
+                            )
                         ),
                     ),
                 ),
@@ -1128,15 +1126,19 @@ return array(
                     0 => array(
                         'name' => 'Regex',
                         'options' => array(
+                            'break_chain_on_failure' => true,
                             'pattern' => '/^[a-z]+[a-z\\-\\.]*[a-z]+$/',
                         ),
                     ),
                     1 => array(
-                        'name' => 'DoctrineModule\\Validator\\UniqueObject',
+                        'name' => 'DoctrineModule\Validator\NoObjectExists',
                         'options' => array(
                             'object_manager' => 'doctrine.entitymanager.orm_default',
                             'object_repository' => 'Application\\Entity\\OAuthUser',
                             'fields' => 'userName',
+                            'messages' => array(
+                                'objectFound' => 'Ce nom est déjà pris.'
+                            )
                         ),
                     ),
                 ),
@@ -1157,12 +1159,16 @@ return array(
                     1 => array(
                         'name' => 'StringLength',
                         'options' => array(
+                            'break_chain_on_failure' => true,
                             'min' => 6,
                             'max' => 30,
                         ),
                     ),
                     2 => array(
                         'name' => 'Application\\Validator\\PasswordStrength',
+                        'options' => array(
+                            'break_chain_on_failure' => true,
+                        )
                     ),
                     3 => array(
                         'name' => 'Identical',

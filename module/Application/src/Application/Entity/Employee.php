@@ -123,6 +123,12 @@ class Employee
 		return $this->userName;
 	}
 
+	function setUserName($userName)
+	{
+		$this->userName = $userName;
+		return $this;
+	}
+
 	function getEmail()
 	{
 		return $this->email;
@@ -300,7 +306,7 @@ class Employee
 
 	function getCountryName()
 	{
-		return $this->country;
+		return $this->countryName;
 	}
 
 	function getBirthdate()

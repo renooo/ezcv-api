@@ -111,7 +111,7 @@ return array(
                 0 => 'GET',
             ),
             'collection_query_whitelist' => array(),
-            'page_size' => 25,
+            'page_size' => 5,
             'page_size_param' => 'limit',
             'entity_class' => 'Application\\Entity\\Employee',
             'collection_class' => 'Api\\V1\\Rest\\Employee\\EmployeeCollection',

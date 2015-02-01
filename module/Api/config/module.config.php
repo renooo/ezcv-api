@@ -974,6 +974,16 @@ return array(
                         ),
                     ),
                 ),
+            ),            
+            'hasDriversLicence' => array(
+                'name' => 'hasDriversLicence',
+                'required' => false,
+                'allow_empty' => true,
+                'filters' => array(
+                    0 => array(
+                        'name' => 'Boolean',
+                    ),
+                ),
             ),
             'isCurrentlyEmployed' => array(
                 'name' => 'isCurrentlyEmployed',
@@ -1014,6 +1024,18 @@ return array(
                         ),
                     ),
                 ),
+            ),
+            'avatarUrl' => array(
+                'name' => 'avatarUrl',
+                'required' => false,
+                'allow_empty' => true,
+                'filters' => array(
+                    array('name' => 'StripTags'),
+                    array('name' => 'StringTrim'),
+                ),
+                'validators' => array(
+                    array('name' => 'Uri')
+                )
             ),
             'description' => array(
                 'name' => 'description',

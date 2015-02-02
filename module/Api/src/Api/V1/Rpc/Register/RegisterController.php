@@ -12,7 +12,6 @@ class RegisterController extends AbstractActionController
     {
     	$inputFilter = $this->getEvent()->getParam('ZF\ContentValidation\InputFilter');
     	$inputFilter->get('password')->getFilterChain()->attachByName('Application\Filter\Bcrypt');
-    	$inputFilter->remove('passwordConfirm');
 
     	$data = $inputFilter->getValues();
 

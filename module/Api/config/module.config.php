@@ -665,8 +665,8 @@ return array(
         'Api\\V1\\Rest\\Employee\\EmployeeInputFilter' => array(
             'id' => array(
                 'name' => 'id',
-                'required' => false,
-                'allow_empty' => true,
+                'required' => true,
+                'allow_empty' => false,
                 'filters' => array(
                     0 => array(
                         'name' => 'Int',
@@ -688,6 +688,7 @@ return array(
                     0 => array(
                         'name' => 'StringLength',
                         'options' => array(
+                            'break_chain_on_failure' => true,
                             'min' => 3,
                             'max' => 25,
                         ),
@@ -715,6 +716,7 @@ return array(
                     0 => array(
                         'name' => 'StringLength',
                         'options' => array(
+                            'break_chain_on_failure' => true,
                             'min' => 3,
                             'max' => 25,
                         ),
@@ -741,14 +743,30 @@ return array(
                 'validators' => array(
                     0 => array(
                         'name' => 'EmailAddress',
+                        'options' => array(
+                            'break_chain_on_failure' => true,
+                        )
                     ),
                     1 => array(
-                        'name' => 'DoctrineModule\\Validator\\UniqueObject',
+                        'name' => 'DoctrineModule\Validator\UniqueObject',
                         'options' => array(
                             'object_manager' => 'doctrine.entitymanager.orm_default',
                             'object_repository' => 'Application\\Entity\\Employee',
                             'fields' => 'email',
+                            'messages' => array(
+                                'objectNotUnique' => 'Cette adresse email existe déjà.'
+                            )
                         ),
+                    ),
+                ),
+            ),            
+            'hasDriversLicence' => array(
+                'name' => 'hasDriversLicence',
+                'required' => false,
+                'allow_empty' => true,
+                'filters' => array(
+                    0 => array(
+                        'name' => 'Boolean',
                     ),
                 ),
             ),
@@ -791,6 +809,18 @@ return array(
                         ),
                     ),
                 ),
+            ),
+            'avatarUrl' => array(
+                'name' => 'avatarUrl',
+                'required' => false,
+                'allow_empty' => true,
+                'filters' => array(
+                    array('name' => 'StripTags'),
+                    array('name' => 'StringTrim'),
+                ),
+                'validators' => array(
+                    array('name' => 'Regex', 'options' => array('pattern' => '/^http:\/\/.+\/[^\/]+\.jpg$/i'))
+                )
             ),
             'description' => array(
                 'name' => 'description',
@@ -857,7 +887,7 @@ return array(
             ),
             'country' => array(
                 'name' => 'country',
-                'required' => true,
+                'required' => true,                
                 'validators' => array(
                     array(
                         'name' => 'DoctrineModule\\Validator\\ObjectExists',
@@ -1034,7 +1064,7 @@ return array(
                     array('name' => 'StringTrim'),
                 ),
                 'validators' => array(
-                    array('name' => 'Uri')
+                    array('name' => 'Regex', 'options' => array('pattern' => '/^http:\/\/.+\/[^\/]+\.jpg$/i'))
                 )
             ),
             'description' => array(

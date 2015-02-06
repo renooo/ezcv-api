@@ -33,7 +33,7 @@ class Experience
 	protected $job;
 
 	/**
-	* @ORM\Column(type="date", nullable=false)
+	* @ORM\Column(type="date", nullable=true)
 	*/
 	protected $dateStart;
 
@@ -43,7 +43,7 @@ class Experience
 	protected $dateEnd;
 
 	/**
-	* @ORM\Column(type="text", nullable=false)
+	* @ORM\Column(type="text", nullable=true)
 	*/
 	protected $description;
 

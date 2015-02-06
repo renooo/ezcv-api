@@ -657,6 +657,9 @@ return array(
         'Api\\V1\\Rest\\Experience\\Controller' => array(
             'input_filter' => 'Api\\V1\\Rest\\Experience\\ExperienceInputFilter',
         ),
+        'Api\\V1\\Rest\\Mission\\Controller' => array(
+            'input_filter' => 'Api\\V1\\Rest\\Mission\\MissionInputFilter',
+        ),
         'Api\\V1\\Rpc\\Register\\Controller' => array(
             'input_filter' => 'Api\\V1\\Rpc\\Register\\RegisterInputFilter',
         ),
@@ -1238,6 +1241,7 @@ return array(
         'Api\\V1\\Rest\\Experience\\ExperienceInputFilter' => array(
             'description' => array(
                 'required' => false,
+                'allow_empty' => true,
                 'filters' => array(
                     0 => array(
                         'name' => 'StripTags',
@@ -1256,7 +1260,8 @@ return array(
                 ),
             ),
             'dateStart' => array(
-                'required' => true,
+                'required' => false,
+                'allow_empty' => true,
                 'filters' => array(
                     0 => array(
                         'name' => 'StripTags',
@@ -1302,7 +1307,8 @@ return array(
                 ),
             ),
             'company' => array(
-                'required' => true,
+                'required' => false,
+                'allow_empty' => true,
                 'validators' => array(
                     0 => array(
                         'name' => 'DoctrineModule\\Validator\\ObjectExists',
@@ -1315,7 +1321,8 @@ return array(
                 ),
             ),
             'job' => array(
-                'required' => true,
+                'required' => false,
+                'allow_empty' => true,
                 'validators' => array(
                     0 => array(
                         'name' => 'DoctrineModule\\Validator\\ObjectExists',
@@ -1328,6 +1335,9 @@ return array(
                 ),
             ),
         ),
+        'Api\\V1\\Rest\\Mission\\MissionInputFilter' => array(
+
+        )
     ),
     'controllers' => array(
         'factories' => array(

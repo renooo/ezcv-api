@@ -64,10 +64,10 @@ class Employee extends \Application\Entity\Employee implements \Doctrine\ORM\Pro
     public function __sleep()
     {
         if ($this->__isInitialized__) {
-            return array('__isInitialized__', 'id', 'userName', 'email', 'firstName', 'lastName', 'fullName', 'isCurrentlyEmployed', 'currentJobName', 'isLookingForAJob', 'description', 'avatarUrl', 'experiences', 'city', 'zipCode', 'country', 'birthdate', 'hasDriversLicence');
+            return array('__isInitialized__', 'id', 'userName', 'email', 'firstName', 'lastName', 'fullName', 'isCurrentlyEmployed', 'currentJobName', 'isLookingForAJob', 'description', 'avatarUrl', 'experiences', 'city', 'zipCode', 'country', 'countryName', 'birthdate', 'hasDriversLicence');
         }
 
-        return array('__isInitialized__', 'id', 'userName', 'email', 'firstName', 'lastName', 'fullName', 'isCurrentlyEmployed', 'currentJobName', 'isLookingForAJob', 'description', 'avatarUrl', 'experiences', 'city', 'zipCode', 'country', 'birthdate', 'hasDriversLicence');
+        return array('__isInitialized__', 'id', 'userName', 'email', 'firstName', 'lastName', 'fullName', 'isCurrentlyEmployed', 'currentJobName', 'isLookingForAJob', 'description', 'avatarUrl', 'experiences', 'city', 'zipCode', 'country', 'countryName', 'birthdate', 'hasDriversLicence');
     }
 
     /**
@@ -197,6 +197,17 @@ class Employee extends \Application\Entity\Employee implements \Doctrine\ORM\Pro
         $this->__initializer__ && $this->__initializer__->__invoke($this, 'getUserName', array());
 
         return parent::getUserName();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function setUserName($userName)
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'setUserName', array($userName));
+
+        return parent::setUserName($userName);
     }
 
     /**
@@ -543,6 +554,17 @@ class Employee extends \Application\Entity\Employee implements \Doctrine\ORM\Pro
     /**
      * {@inheritDoc}
      */
+    public function getCountryName()
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getCountryName', array());
+
+        return parent::getCountryName();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     public function getBirthdate()
     {
 
@@ -604,6 +626,17 @@ class Employee extends \Application\Entity\Employee implements \Doctrine\ORM\Pro
         $this->__initializer__ && $this->__initializer__->__invoke($this, 'updateFullName', array());
 
         return parent::updateFullName();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function updateCoutryName()
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'updateCoutryName', array());
+
+        return parent::updateCoutryName();
     }
 
 }

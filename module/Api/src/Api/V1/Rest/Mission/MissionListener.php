@@ -20,9 +20,15 @@ class MissionListener extends AbstractListenerAggregate
 		$identity = $e->getResourceEvent()->getIdentity();
 		$mission = $e->getEntity();
 
+		try {
+			$experience = $mission->getExperience();
+		}catch(\Exception $e){
+			$experience = null;
+		}
+
 		if(!($identity instanceof AuthenticatedIdentity) || 
-			 $mission->getExperience()->getEmployee()->getUserName() != 
-			 $identity->getAuthenticationIdentity()['user_id']){
+			($experience && $experience->getEmployee()->getUserName() != 
+			 $identity->getAuthenticationIdentity()['user_id'])){
 
 			$e->stopPropagation();
 	        return new ApiProblem(403, 'You shall not pass !');

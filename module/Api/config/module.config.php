@@ -183,7 +183,7 @@ return array(
             'collection_name' => 'missions',
             'entity_http_methods' => array(
                 0 => 'GET',
-                1 => 'PATCH',
+                1 => 'PUT',
                 2 => 'DELETE',
             ),
             'collection_http_methods' => array(
@@ -620,8 +620,8 @@ return array(
                 'entity' => array(
                     'GET' => false,
                     'POST' => false,
-                    'PATCH' => true,
-                    'PUT' => false,
+                    'PATCH' => false,
+                    'PUT' => true,
                     'DELETE' => true,
                 ),
                 'collection' => array(
@@ -1336,7 +1336,74 @@ return array(
             ),
         ),
         'Api\\V1\\Rest\\Mission\\MissionInputFilter' => array(
-
+            'name' => array(
+                'required' => false,
+                'allow_empty' => true,
+                'filters' => array(
+                    0 => array(
+                        'name' => 'StripTags',
+                    ),
+                    1 => array(
+                        'name' => 'StringTrim',
+                    ),
+                ),
+                'validators' => array(
+                    0 => array(
+                        'name' => 'StringLength',
+                        'options' => array(
+                            'max' => 250,
+                        ),
+                    ),
+                ),
+            ),
+            'description' => array(
+                'required' => false,
+                'allow_empty' => true,
+                'filters' => array(
+                    array(
+                        'name' => 'StripTags',
+                    ),
+                    array(
+                        'name' => 'StringTrim',
+                    ),
+                ),
+                'validators' => array(
+                    array(
+                        'name' => 'StringLength',
+                        'options' => array(
+                            'max' => 500,
+                        ),
+                    ),
+                ),
+            ),
+            'experience' => array(
+                'required' => true,
+                'validators' => array(
+                    array(
+                        'name' => 'DoctrineModule\\Validator\\ObjectExists',
+                        'options' => array(
+                            'object_manager' => 'doctrine.entitymanager.orm_default',
+                            'object_repository' => 'Application\\Entity\\Experience',
+                            'fields' => 'id',
+                        ),
+                    ),
+                )
+            ),
+            'tags' => array(
+                'required' => false,
+                'allow_empty' => true,
+                'is_collection' => true,
+                /*'validators' => array(
+                    array(
+                        'name' => 'DoctrineModule\\Validator\\ObjectExists',
+                        'options' => array(
+                            'object_manager' => 'doctrine.entitymanager.orm_default',
+                            'object_repository' => 'Application\\Entity\\Tag',
+                            'fields' => 'id',
+                        ),
+                    ),
+                )*/
+            )
         )
     ),
     'controllers' => array(

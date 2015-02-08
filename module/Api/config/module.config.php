@@ -1390,10 +1390,10 @@ return array(
                 )
             ),
             'tags' => array(
+                'type' => 'collection',
                 'required' => false,
                 'allow_empty' => true,
-                'is_collection' => true,
-                /*'validators' => array(
+                'validators' => array(
                     array(
                         'name' => 'DoctrineModule\\Validator\\ObjectExists',
                         'options' => array(
@@ -1402,7 +1402,7 @@ return array(
                             'fields' => 'id',
                         ),
                     ),
-                )*/
+                )
             )
         )
     ),

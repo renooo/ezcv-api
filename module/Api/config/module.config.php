@@ -5,6 +5,7 @@ return array(
             'Api\\V1\\Rest\\Employee\\EmployeeListener' => 'Api\\V1\\Rest\\Employee\\EmployeeListener',
             'Api\\V1\\Rest\\Experience\\ExperienceListener' => 'Api\\V1\\Rest\\Experience\\ExperienceListener',
             'Api\\V1\\Rest\\Mission\\MissionListener' => 'Api\\V1\\Rest\\Mission\\MissionListener',
+            'Application\\Stdlib\\Hydrator\\Strategy\\UpdatableHalCollection' => 'Application\\Stdlib\\Hydrator\\Strategy\\UpdatableHalCollection'
         ),
     ),
     'router' => array(
@@ -531,7 +532,7 @@ return array(
             'object_manager' => 'doctrine.entitymanager.orm_default',
             'by_value' => true,
             'strategies' => array(
-                'tags' => 'ZF\\Apigility\\Doctrine\\Server\\Hydrator\\Strategy\\CollectionExtract',
+                'tags' => 'Application\\Stdlib\\Hydrator\\Strategy\\UpdatableHalCollection',
             ),
             'use_generated_hydrator' => true,
         ),

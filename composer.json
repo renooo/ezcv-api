@@ -12,7 +12,8 @@
         "zfcampus/zf-development-mode": "~2.0",
         "zfcampus/zf-apigility-doctrine": "~0.3",
         "doctrine/doctrine-orm-module": "0.8.*",
-        "zfcampus/zf-doctrine-querybuilder": "0.1.*"
+        "zfcampus/zf-doctrine-querybuilder": "dev-develop",
+        "zfcampus/zf-hal": "dev-develop"
     },
     "require-dev": {
         "zendframework/zftool": "dev-master",

@@ -5,7 +5,9 @@ return array(
             'Api\\V1\\Rest\\Employee\\EmployeeListener' => 'Api\\V1\\Rest\\Employee\\EmployeeListener',
             'Api\\V1\\Rest\\Experience\\ExperienceListener' => 'Api\\V1\\Rest\\Experience\\ExperienceListener',
             'Api\\V1\\Rest\\Mission\\MissionListener' => 'Api\\V1\\Rest\\Mission\\MissionListener',
-            'Application\\Stdlib\\Hydrator\\Strategy\\UpdatableHalCollection' => 'Application\\Stdlib\\Hydrator\\Strategy\\UpdatableHalCollection'
+            'Application\\Stdlib\\Hydrator\\Strategy\\UpdatableHalCollection' => 'Application\\Stdlib\\Hydrator\\Strategy\\UpdatableHalCollection',
+            'Application\\Stdlib\\Hydrator\\Filter\\ExperienceFilter' => 'Application\\Stdlib\\Hydrator\\Filter\\ExperienceFilter',
+            'Application\\Stdlib\\Hydrator\\Filter\\MissionFilter' => 'Application\\Stdlib\\Hydrator\\Filter\\MissionFilter'
         ),
     ),
     'router' => array(
@@ -370,7 +372,6 @@ return array(
     ),
     'zf-hal' => array(
         'renderer' => array(
-            'render_embedded_entities' => false,
         ),
         'metadata_map' => array(
             'Application\\Entity\\Employee' => array(
@@ -378,11 +379,13 @@ return array(
                 'entity_identifier_name' => 'id',
                 'route_name' => 'api.rest.doctrine.employee',
                 'hydrator' => 'Api\\V1\\Rest\\Employee\\EmployeeHydrator',
+                //'max_depth' => 6,
             ),
             'Api\\V1\\Rest\\Employee\\EmployeeCollection' => array(
                 'entity_identifier_name' => 'id',
                 'route_name' => 'api.rest.doctrine.employee',
                 'is_collection' => true,
+                //'max_depth' => 1,
             ),
             'Application\\Entity\\Company' => array(
                 'route_identifier_name' => 'company_id',
@@ -517,8 +520,14 @@ return array(
             'by_value' => true,
             'strategies' => array(
                 'missions' => 'ZF\\Apigility\\Doctrine\\Server\\Hydrator\\Strategy\\CollectionExtract',
+                //'employee' => 'Application\\Stdlib\\Hydrator\\Strategy\\ExtractOnlyId'
             ),
             'use_generated_hydrator' => true,
+            'filters' => array(
+                array(
+                    'filter' => 'Application\\Stdlib\\Hydrator\\Filter\\ExperienceFilter'
+                )
+            )
         ),
         'Api\\V1\\Rest\\Job\\JobHydrator' => array(
             'entity_class' => 'Application\\Entity\\Job',
@@ -533,8 +542,14 @@ return array(
             'by_value' => true,
             'strategies' => array(
                 'tags' => 'Application\\Stdlib\\Hydrator\\Strategy\\UpdatableHalCollection',
+                //'experience' => 'Application\\Stdlib\\Hydrator\\Strategy\\ExtractOnlyId'
             ),
             'use_generated_hydrator' => true,
+            'filters' => array(
+                array(
+                    'filter' => 'Application\\Stdlib\\Hydrator\\Filter\\MissionFilter'
+                )
+            )
         ),
         'Api\\V1\\Rest\\Tag\\TagHydrator' => array(
             'entity_class' => 'Application\\Entity\\Tag',
